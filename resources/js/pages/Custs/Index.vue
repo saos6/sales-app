@@ -30,17 +30,16 @@ import { reactive, watch } from 'vue';
 import { ChevronsUpDown, ArrowUp, ArrowDown } from 'lucide-vue-next';
 
 const props = defineProps<{
-  depts: {
+  custs: {
     data: Array<{
       id: number;
       name: string;
-      parent_id: number | null;
-      created_at: string;
-      updated_at: string;
-      parent?: { name: string };
+      contact_person_name: string;
+      tel: string;
+      email: string;
     }>;
-    links: Array<{ url: string | null; label: string; active: boolean }>;
-    meta: { current_page: number; per_page: number; total: number };
+    links?: Array<{ url: string | null; label: string; active: boolean }>;
+    meta?: { current_page: number; per_page: number; total: number };
   };
   filters: { search: string; per_page: string };
   sort?: string;
@@ -53,18 +52,19 @@ const form = useForm({
 });
 
 const search = () => {
-  form.get(route('depts.index'), { preserveState: true });
+  form.get(route('custs.index'), { preserveState: true });
 };
 
 watch(() => form.per_page, (newValue) => {
-  router.get(route('depts.index'), { ...route().params, per_page: newValue }, { preserveState: true });
+  router.get(route('custs.index'), { ...route().params, per_page: newValue }, { preserveState: true });
 });
 
-const deleteDept = (id: number) => {
+const deleteCust = (id: number) => {
   if (confirm('本当に削除しますか？')) {
-    router.delete(route('depts.destroy', id), {
+    router.delete(route('custs.destroy', id), {
       onSuccess: () => {
-        // You can show a notification here or emit an event to the parent component if needed.
+        // 必要に応じて、ここで通知を表示したり、
+        // 親コンポーネントにイベントをemitしたりできます。
       },
     });
   }
@@ -72,8 +72,10 @@ const deleteDept = (id: number) => {
 
 const columns = reactive([
   { key: 'id', label: 'ID', visible: true, sortable: true },
-  { key: 'name', label: '所属名', visible: true, sortable: true },
-  { key: 'parent', label: '親所属', visible: true, sortable: false },
+  { key: 'name', label: '名称', visible: true, sortable: true },
+  { key: 'contact_person_name', label: '担当者名', visible: true, sortable: true },
+  { key: 'tel', label: '電話番号', visible: true, sortable: true },
+  { key: 'email', label: 'メールアドレス', visible: true, sortable: true },
   { key: 'actions', label: '操作', visible: true, sortable: false },
 ]);
 
@@ -87,7 +89,7 @@ const sortBy = (key: string) => {
     newOrder = 'desc';
   }
 
-  router.get(route('depts.index'), { ...route().params, sort: key, order: newOrder }, { preserveState: true });
+  router.get(route('custs.index'), { ...route().params, sort: key, order: newOrder }, { preserveState: true });
 };
 
 const sortIcon = (key: string) => {
@@ -99,17 +101,17 @@ const sortIcon = (key: string) => {
 </script>
 
 <template>
-  <Head title="所属マスタ" />
+  <Head title="顧客マスタ" />
 
   <AppLayout>
     <div class="py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-          <div v-if="depts && depts.data">
+          <div class="p-6 text-gray-900 dark:text-gray-100">
             <div class="mb-4">
               <form @submit.prevent="search">
                 <div class="flex gap-2">
-                  <Input v-model="form.search" placeholder="名称で検索..." class="max-w-xs" />
+                  <Input v-model="form.search" placeholder="名称、かな、電話番号、Emailで検索..." class="max-w-xs" />
                   <Button type="submit">検索</Button>
                 </div>
               </form>
@@ -117,10 +119,10 @@ const sortIcon = (key: string) => {
 
             <div class="flex justify-between items-center mb-4">
               <div class="flex gap-2">
-                <Link :href="route('depts.create')">
+                <Link :href="route('custs.create')">
                   <Button>新規登録</Button>
                 </Link>
-                <a :href="route('depts.export', { search: form.search })">
+                <a :href="route('custs.export', { search: form.search })">
                   <Button variant="outline">Excelエクスポート</Button>
                 </a>
               </div>
@@ -154,8 +156,8 @@ const sortIcon = (key: string) => {
               </div>
             </div>
 
-            <div v-if="depts.meta" class="text-sm text-gray-500 mb-4">
-              {{ depts.meta.total }}件見つかりました。
+            <div v-if="custs.meta" class="text-sm text-gray-500 mb-4">
+              {{ custs.meta.total }}件見つかりました。
             </div>
 
             <Table>
@@ -168,31 +170,47 @@ const sortIcon = (key: string) => {
                   </TableHead>
                   <TableHead v-if="isVisible('name')" @click="sortBy('name')" class="cursor-pointer">
                      <div class="flex items-center">
-                      所属名 <component :is="sortIcon('name')" class="ml-2 h-4 w-4" />
+                      名称 <component :is="sortIcon('name')" class="ml-2 h-4 w-4" />
                     </div>
                   </TableHead>
-                  <TableHead v-if="isVisible('parent')">親所属</TableHead>
+                  <TableHead v-if="isVisible('contact_person_name')" @click="sortBy('contact_person_name')" class="cursor-pointer">
+                     <div class="flex items-center">
+                      担当者名 <component :is="sortIcon('contact_person_name')" class="ml-2 h-4 w-4" />
+                    </div>
+                  </TableHead>
+                  <TableHead v-if="isVisible('tel')" @click="sortBy('tel')" class="cursor-pointer">
+                     <div class="flex items-center">
+                      電話番号 <component :is="sortIcon('tel')" class="ml-2 h-4 w-4" />
+                    </div>
+                  </TableHead>
+                  <TableHead v-if="isVisible('email')" @click="sortBy('email')" class="cursor-pointer">
+                     <div class="flex items-center">
+                      メールアドレス <component :is="sortIcon('email')" class="ml-2 h-4 w-4" />
+                    </div>
+                  </TableHead>
                   <TableHead v-if="isVisible('actions')">操作</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow v-for="dept in depts.data" :key="dept.id">
-                  <TableCell v-if="isVisible('id')">{{ dept.id }}</TableCell>
-                  <TableCell v-if="isVisible('name')">{{ dept.name }}</TableCell>
-                  <TableCell v-if="isVisible('parent')">{{ dept.parent?.name }}</TableCell>
+                <TableRow v-for="cust in custs.data" :key="cust.id">
+                  <TableCell v-if="isVisible('id')">{{ cust.id }}</TableCell>
+                  <TableCell v-if="isVisible('name')">{{ cust.name }}</TableCell>
+                  <TableCell v-if="isVisible('contact_person_name')">{{ cust.contact_person_name }}</TableCell>
+                  <TableCell v-if="isVisible('tel')">{{ cust.tel }}</TableCell>
+                  <TableCell v-if="isVisible('email')">{{ cust.email }}</TableCell>
                   <TableCell v-if="isVisible('actions')">
-                    <Link :href="route('depts.edit', dept.id)" class="mr-2">
+                    <Link :href="route('custs.edit', cust.id)" class="mr-2">
                       <Button variant="outline" size="sm">編集</Button>
                     </Link>
-                    <Button variant="destructive" size="sm" @click="deleteDept(dept.id)">削除</Button>
+                    <Button variant="destructive" size="sm" @click="deleteCust(cust.id)">削除</Button>
                   </TableCell>
                 </TableRow>
               </TableBody>
             </Table>
 
-            <div v-if="depts.links" class="mt-4 flex justify-center">
+            <div v-if="custs.links" class="mt-4 flex justify-center">
               <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                <template v-for="(link, key) in depts.links" :key="key">
+                <template v-for="(link, key) in custs.links" :key="key">
                   <Link
                     :href="link.url || ''"
                     v-html="link.label"

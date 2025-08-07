@@ -29,6 +29,9 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('emps', \App\Http\Controllers\EmpController::class)->except(['show']);
     Route::get('emps/export', [\App\Http\Controllers\EmpController::class, 'export'])->name('emps.export');
+
+    Route::resource('custs', \App\Http\Controllers\CustController::class)->except(['show']);
+    Route::get('custs/export', [\App\Http\Controllers\CustController::class, 'export'])->name('custs.export');
 });
 
 require __DIR__.'/auth.php';

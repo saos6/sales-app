@@ -13,10 +13,26 @@ class DeptController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $query = Dept::with('parent');
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->input('search') . '%');
+        }
+
+        if ($request->has('sort')) {
+            $direction = $request->input('order', 'asc');
+            $query->orderBy($request->input('sort'), $direction);
+        }
+
+        $perPage = $request->input('per_page', 10);
+
         return Inertia::render('Depts/Index', [
-            'depts' => Dept::with('parent')->get(),
+            'depts' => $query->paginate($perPage)->withQueryString(),
+            'filters' => $request->only(['search', 'per_page']),
+            'sort' => $request->input('sort'),
+            'order' => $request->input('order'),
         ]);
     }
 
@@ -92,8 +108,8 @@ class DeptController extends Controller
     /**
      * Export data to Excel.
      */
-    public function export()
+    public function export(Request $request)
     {
-        return Excel::download(new DeptsExport, 'depts.xlsx');
+        return Excel::download(new DeptsExport($request->input('search')), 'depts.xlsx');
     }
 }

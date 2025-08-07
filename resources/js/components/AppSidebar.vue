@@ -24,6 +24,11 @@ const mainNavItems: NavItem[] = [
         href: '/emps',
         icon: Users,
     },
+    {
+        title: '顧客マスタ',
+        href: '/custs',
+        icon: Users,
+    },
 ];
 
 const footerNavItems: NavItem[] = [

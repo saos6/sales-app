@@ -9,12 +9,28 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 
 class EmpsExport implements FromCollection, WithHeadings, WithMapping
 {
+    protected $search;
+
+    public function __construct($search)
+    {
+        $this->search = $search;
+    }
+
     /**
     * @return \Illuminate\Support\Collection
     */
     public function collection()
     {
-        return Emp::with('dept')->get();
+        $query = Emp::with('dept');
+
+        if (!empty($this->search)) {
+            $query->where(function ($query) {
+                $query->where('name', 'like', '%' . $this->search . '%')
+                      ->orWhere('email', 'like', '%' . $this->search . '%');
+            });
+        }
+
+        return $query->get();
     }
 
     public function headings(): array

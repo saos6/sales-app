@@ -14,10 +14,29 @@ class EmpController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $query = Emp::with('dept');
+
+        if ($request->filled('search')) {
+            $query->where(function ($query) use ($request) {
+                $query->where('name', 'like', '%' . $request->input('search') . '%')
+                      ->orWhere('email', 'like', '%' . $request->input('search') . '%');
+            });
+        }
+
+        if ($request->has('sort')) {
+            $direction = $request->input('order', 'asc');
+            $query->orderBy($request->input('sort'), $direction);
+        }
+
+        $perPage = $request->input('per_page', 10);
+
         return Inertia::render('Emps/Index', [
-            'emps' => Emp::with('dept')->get(),
+            'emps' => $query->paginate($perPage)->withQueryString(),
+            'filters' => $request->only(['search', 'per_page']),
+            'sort' => $request->input('sort'),
+            'order' => $request->input('order'),
         ]);
     }
 
@@ -97,8 +116,8 @@ class EmpController extends Controller
     /**
      * Export data to Excel.
      */
-    public function export()
+    public function export(Request $request)
     {
-        return Excel::download(new EmpsExport, 'emps.xlsx');
+        return Excel::download(new EmpsExport($request->input('search')), 'emps.xlsx');
     }
 }
