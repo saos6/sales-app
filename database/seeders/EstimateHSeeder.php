@@ -16,6 +16,8 @@ class EstimateHSeeder extends Seeder
      */
     public function run(): void
     {
+        EstimateH::truncate();
+
         // Ensure there are customers and employees to link to
         if (Cust::count() === 0) {
             \App\Models\Cust::factory()->count(5)->create();

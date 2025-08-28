@@ -28,7 +28,7 @@ class CustFactory extends Factory
             'department_name' => $this->faker->jobTitle,
             'contact_person_name' => $this->faker->name,
             'postal_code' => $this->faker->postcode,
-            'prefecture' => $this->faker->prefecture,
+            'prefecture' => $this->faker->address,
             'address_line' => $this->faker->address,
             'tel' => $this->faker->phoneNumber,
             'fax' => $this->faker->phoneNumber,
@@ -40,7 +40,7 @@ class CustFactory extends Factory
             'customer_rank' => $this->faker->randomElement(CustomerRank::cases()),
             'payment_terms' => $this->faker->randomElement(PaymentTerms::cases()),
             'depts_id' => Dept::factory(),
-            'emps_id' => Emp::factory(),
+            'emps_id' => Emp::inRandomOrder()->first()->id,
             'remarks' => $this->faker->realText(),
         ];
     }

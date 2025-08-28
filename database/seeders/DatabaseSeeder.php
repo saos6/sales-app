@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,6 +13,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        Schema::disableForeignKeyConstraints();
+
         // \App\Models\User::factory(10)->create();
 
         // \App\Models\User::factory()->create([
@@ -24,8 +27,10 @@ class DatabaseSeeder extends Seeder
             EmpSeeder::class,
             CustSeeder::class,
             ItemSeeder::class,
-            EstimateHSeeder::class, // Add this line
-            EstimateMSeeder::class, // Add this line
+            EstimateHSeeder::class,
+            EstimateMSeeder::class,
         ]);
+
+        Schema::enableForeignKeyConstraints();
     }
 }

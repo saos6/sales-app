@@ -13,6 +13,7 @@ class CustSeeder extends Seeder
      */
     public function run(): void
     {
-        Cust::factory(10)->create();
+        Cust::truncate();
+        Cust::factory()->count(50)->create();
     }
 }
