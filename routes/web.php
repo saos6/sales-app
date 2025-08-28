@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\DeptController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\EstimateController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -32,6 +34,13 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('custs', \App\Http\Controllers\CustController::class)->except(['show']);
     Route::get('custs/export', [\App\Http\Controllers\CustController::class, 'export'])->name('custs.export');
+
+    Route::resource('items', ItemController::class)->except(['show']);
+    Route::get('items/export', [ItemController::class, 'export'])->name('items.export');
+
+    // Add these lines for Estimate
+    Route::resource('estimates', EstimateController::class)->except(['show']);
+    Route::get('estimates/export', [EstimateController::class, 'export'])->name('estimates.export');
 });
 
 require __DIR__.'/auth.php';
