@@ -41,6 +41,9 @@ Route::middleware('auth')->group(function () {
     // Add these lines for Estimate
     Route::resource('estimates', EstimateController::class)->except(['show']);
     Route::get('estimates/export', [EstimateController::class, 'export'])->name('estimates.export');
+
+    Route::resource('sales', \App\Http\Controllers\SalesController::class)->except(['show']);
+    Route::get('sales/export', [\App\Http\Controllers\SalesController::class, 'export'])->name('sales.export');
 });
 
 require __DIR__.'/auth.php';

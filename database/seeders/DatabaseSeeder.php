@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             ItemSeeder::class,
             EstimateHSeeder::class,
             EstimateMSeeder::class,
+            SalesHSeeder::class,
         ]);
 
         Schema::enableForeignKeyConstraints();

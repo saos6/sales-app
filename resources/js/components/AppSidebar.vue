@@ -40,6 +40,11 @@ const mainNavItems: NavItem[] = [
         href: '/estimates',
         icon: FileText,
     },
+    {
+        title: '売上入力',
+        href: '/sales',
+        icon: FileText,
+    },
 ];
 
 const footerNavItems: NavItem[] = [
