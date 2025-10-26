@@ -41,7 +41,7 @@ class SalesHSeeder extends Seeder
             $tax = 0;
 
             $salesH = SalesH::create([
-                'sales_no' => 'SAL-' . str_pad($i + 1, 8, '0', STR_PAD_LEFT),
+                'sales_no' => 'SAL-' . str_pad($i + 1, 8, '0', STR_PAD_LEFT) . '-' . uniqid(),
                 'sales_date' => $faker->dateTimeBetween('-1 year', 'now'),
                 'posting_date' => $faker->dateTimeBetween('-1 year', 'now'),
                 'cust_id' => $cust->id,

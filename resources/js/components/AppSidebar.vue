@@ -45,6 +45,11 @@ const mainNavItems: NavItem[] = [
         href: '/sales',
         icon: FileText,
     },
+    {
+        title: '入金入力',
+        href: '/payments',
+        icon: FileText,
+    },
 ];
 
 const footerNavItems: NavItem[] = [
