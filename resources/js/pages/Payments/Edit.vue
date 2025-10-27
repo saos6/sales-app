@@ -22,6 +22,7 @@ const props = defineProps<{
 }>();
 
 const form = useForm({
+    receipt_no: props.payment.receipt_no,
     payment_date: props.payment.payment_date,
     cust_id: props.payment.cust_id,
     emps_id: props.payment.emps_id,
@@ -60,8 +61,14 @@ const submit = () => {
                         <form @submit.prevent="submit">
                             <div class="grid grid-cols-2 gap-6">
                                 <div>
+                                    <Label for="receipt_no">入金番号</Label>
+                                    <Input id="receipt_no" v-model="form.receipt_no" type="text" required />
+                                    <div v-if="form.errors.receipt_no" class="text-sm text-red-600 mt-1">{{ form.errors.receipt_no }}</div>
+                                </div>
+                                <div>
                                     <Label for="payment_date">入金日</Label>
                                     <Input id="payment_date" v-model="form.payment_date" type="date" required />
+                                    <div v-if="form.errors.payment_date" class="text-sm text-red-600 mt-1">{{ form.errors.payment_date }}</div>
                                 </div>
                                 <div>
                                     <Label for="cust_id">顧客</Label>

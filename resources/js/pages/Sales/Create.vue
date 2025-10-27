@@ -28,6 +28,7 @@ const props = defineProps<{
 }>();
 
 const form = useForm({
+    sales_no: '',
     sales_date: new Date().toISOString().split('T')[0],
     posting_date: new Date().toISOString().split('T')[0],
     cust_id: null,
@@ -88,8 +89,14 @@ const submit = () => {
                         <form @submit.prevent="submit">
                             <div class="grid grid-cols-2 gap-6">
                                 <div>
+                                    <Label for="sales_no">売上番号</Label>
+                                    <Input id="sales_no" v-model="form.sales_no" type="text" required />
+                                    <div v-if="form.errors.sales_no" class="text-sm text-red-600 mt-1">{{ form.errors.sales_no }}</div>
+                                </div>
+                                <div>
                                     <Label for="sales_date">売上日</Label>
                                     <Input id="sales_date" v-model="form.sales_date" type="date" required />
+                                    <div v-if="form.errors.sales_date" class="text-sm text-red-600 mt-1">{{ form.errors.sales_date }}</div>
                                 </div>
                                 <div>
                                     <Label for="posting_date">計上日</Label>

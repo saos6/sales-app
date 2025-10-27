@@ -22,7 +22,7 @@ class PaymentController extends Controller
 
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
-                $q->where('payment_no', 'like', '%' . $request->input('search') . '%')
+                $q->where('receipt_no', 'like', '%' . $request->input('search') . '%')
                     ->orWhere('remarks', 'like', '%' . $request->input('search') . '%')
                     ->orWhere('cust_name', 'like', '%' . $request->input('search') . '%');
             });
@@ -59,6 +59,7 @@ class PaymentController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'receipt_no' => 'required|string|max:50|unique:payments_h,receipt_no',
             'payment_date' => 'required|date',
             'cust_id' => 'required|exists:custs,id',
             'emps_id' => 'required|exists:emps,id',
@@ -79,7 +80,7 @@ class PaymentController extends Controller
             }
 
             $paymentH = PaymentH::create([
-                'payment_no' => 'PAY-' . time(), // Simple unique number
+                'receipt_no' => $validated['receipt_no'],
                 'payment_date' => $validated['payment_date'],
                 'cust_id' => $validated['cust_id'],
                 'cust_name' => $cust->name,
@@ -94,8 +95,10 @@ class PaymentController extends Controller
                     'payment_id' => $paymentH->id,
                     'line_no' => $index + 1,
                     'payment_category' => $detail['payment_category'],
+                    'payment_type' => $detail['payment_category'], // Add this line
                     'bank_info' => $detail['bank_info'],
                     'amount' => $detail['amount'],
+                    'apply_amount' => $detail['amount'],
                 ]);
             }
         });
@@ -118,6 +121,7 @@ class PaymentController extends Controller
     public function update(Request $request, PaymentH $payment)
     {
         $validated = $request->validate([
+            'receipt_no' => 'required|string|max:50|unique:payments_h,receipt_no,' . $payment->id,
             'payment_date' => 'required|date',
             'cust_id' => 'required|exists:custs,id',
             'emps_id' => 'required|exists:emps,id',
@@ -138,6 +142,7 @@ class PaymentController extends Controller
             }
 
             $payment->update([
+                'receipt_no' => $validated['receipt_no'],
                 'payment_date' => $validated['payment_date'],
                 'cust_id' => $validated['cust_id'],
                 'cust_name' => $cust->name,
@@ -153,8 +158,10 @@ class PaymentController extends Controller
                     'payment_id' => $payment->id,
                     'line_no' => $index + 1,
                     'payment_category' => $detail['payment_category'],
+                    'payment_type' => $detail['payment_category'], // Add this line
                     'bank_info' => $detail['bank_info'],
                     'amount' => $detail['amount'],
+                    'apply_amount' => $detail['amount'],
                 ]);
             }
         });

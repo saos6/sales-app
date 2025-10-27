@@ -56,6 +56,7 @@ class SalesController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'sales_no' => 'required|string|max:255|unique:sales_h,sales_no',
             'sales_date' => 'required|date',
             'posting_date' => 'required|date',
             'cust_id' => 'required|exists:custs,id',
@@ -82,7 +83,7 @@ class SalesController extends Controller
             }
 
             $salesH = SalesH::create([
-                'sales_no' => 'SAL-' . time(), // Simple unique number
+                'sales_no' => $validated['sales_no'],
                 'sales_date' => $validated['sales_date'],
                 'posting_date' => $validated['posting_date'],
                 'cust_id' => $validated['cust_id'],
@@ -130,6 +131,7 @@ class SalesController extends Controller
     public function update(Request $request, SalesH $sale)
     {
         $validated = $request->validate([
+            'sales_no' => 'required|string|max:255|unique:sales_h,sales_no,' . $sale->id,
             'sales_date' => 'required|date',
             'posting_date' => 'required|date',
             'cust_id' => 'required|exists:custs,id',
@@ -156,6 +158,7 @@ class SalesController extends Controller
             }
 
             $sale->update([
+                'sales_no' => $validated['sales_no'],
                 'sales_date' => $validated['sales_date'],
                 'posting_date' => $validated['posting_date'],
                 'cust_id' => $validated['cust_id'],

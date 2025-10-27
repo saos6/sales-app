@@ -19,6 +19,8 @@ class PaymentM extends Model
         'payment_category',
         'bank_info',
         'amount',
+        'apply_amount',
+        'payment_type',
     ];
 
     public function paymentH(): BelongsTo
