@@ -5,9 +5,7 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Building, Users, FileText } from 'lucide-vue-next';
-import { Package } from 'lucide-vue-next';
-import AppLogo from './AppLogo.vue';
+import { BookOpen, Folder, LayoutGrid, Building, Users, FileText, Settings, Package, Database, User, KeyRound, Paintbrush } from 'lucide-vue-next';
 
 const mainNavItems: NavItem[] = [
     {
@@ -16,24 +14,30 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: '所属マスタ',
-        href: '/depts',
-        icon: Building,
-    },
-    {
-        title: '社員マスタ',
-        href: '/emps',
-        icon: Users,
-    },
-    {
-        title: '顧客マスタ',
-        href: '/custs',
-        icon: Users,
-    },
-    {
-        title: '商品マスタ',
-        href: '/items',
-        icon: Package,
+        title: 'マスタ管理',
+        icon: Database,
+        children: [
+            {
+                title: '所属マスタ',
+                href: '/depts',
+                icon: Building,
+            },
+            {
+                title: '社員マスタ',
+                href: '/emps',
+                icon: Users,
+            },
+            {
+                title: '顧客マスタ',
+                href: '/custs',
+                icon: Users,
+            },
+            {
+                title: '商品マスタ',
+                href: '/items',
+                icon: Package,
+            },
+        ],
     },
     {
         title: '見積入力',
@@ -49,6 +53,27 @@ const mainNavItems: NavItem[] = [
         title: '入金入力',
         href: '/payments',
         icon: FileText,
+    },
+    {
+        title: '設定',
+        icon: Settings,
+        children: [
+            {
+                title: 'プロフィール',
+                href: '/settings/profile',
+                icon: User,
+            },
+            {
+                title: 'パスワード',
+                href: '/settings/password',
+                icon: KeyRound,
+            },
+            {
+                title: '外観',
+                href: '/settings/appearance',
+                icon: Paintbrush,
+            },
+        ],
     },
 ];
 
