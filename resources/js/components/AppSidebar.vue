@@ -5,7 +5,7 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Building, Users, FileText, Settings, Package, Database, User, KeyRound, Paintbrush } from 'lucide-vue-next';
+import { BookOpen, Folder, LayoutGrid, Building, Users, FileText, Settings, Package, Database, User, KeyRound, Paintbrush, FileSearch } from 'lucide-vue-next';
 
 const mainNavItems: NavItem[] = [
     {
@@ -53,6 +53,11 @@ const mainNavItems: NavItem[] = [
         title: '入金入力',
         href: '/payments',
         icon: FileText,
+    },
+    {
+        title: '請求検索',
+        href: '/claims',
+        icon: FileSearch,
     },
     {
         title: '設定',

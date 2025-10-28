@@ -47,6 +47,11 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('payments', \App\Http\Controllers\PaymentController::class)->except(['show']);
     Route::get('payments/export', [\App\Http\Controllers\PaymentController::class, 'export'])->name('payments.export');
+
+    Route::resource('claims', \App\Http\Controllers\ClaimController::class)->except(['show']);
+    Route::get('claims/export/excel', [\App\Http\Controllers\ClaimController::class, 'exportExcel'])->name('claims.export.excel');
+    Route::get('claims/export/pdf', [\App\Http\Controllers\ClaimController::class, 'exportPdf'])->name('claims.export.pdf');
+    Route::get('claims/export/invoices', [\App\Http\Controllers\ClaimController::class, 'exportInvoices'])->name('claims.export.invoices');
 });
 
 require __DIR__.'/auth.php';
